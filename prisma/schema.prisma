@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id               Int     @id @default(autoincrement())
+  nome             String
+  endereco         String
+  salas            Sala[]
+  filmes           Filme[]
+  administradores  Administrador[]
+  usuarios         Usuario[]
+}
+
+model Sala {
+  id_sala    Int     @id @default(autoincrement()) @map(name: "id_sala")
+  nome       String
+  capacidade Int
+  id_tenant  Int
+  Tenant     Tenant  @relation(fields: [id_tenant], references: [id])
+}
+
+model Filme {
+  id_filme  Int     @id @default(autoincrement()) @map(name: "id_filme")
+  titulo    String
+  duracao   Int
+  sinopse   String
+  id_tenant Int
+  Tenant    Tenant  @relation(fields: [id_tenant], references: [id])
+}
+
+model Administrador {
+  id_admin  Int        @id @default(autoincrement()) @map(name: "id_admin")
+  nome      String
+  email     String
+  senha     String
+  id_tenant Int
+  Tenant    Tenant  @relation(fields: [id_tenant], references: [id])
+}
+
+model Usuario {
+  id_usuario Int     @id @default(autoincrement()) @map(name: "id_usuario")
+  nome       String
+  email      String
+  senha      String
+  id_tenant  Int
+  Tenant     Tenant  @relation(fields: [id_tenant], references: [id])
+}
